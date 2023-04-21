@@ -1,6 +1,6 @@
-import { getObject } from "./file-parser.js";
-import { getDiffObject, getSortDiffObject } from "./diff-object.js";
-import { objectToStringConverter } from "./object-to-string-converter.js";
+import { getObject } from './file-parser.js';
+import { getDiffObject, getSortDiffObject } from './diff-object.js';
+import objectToStringConverter from './object-to-string-converter.js';
 
 export default (filepath1, filepath2) => {
   const obj1 = getObject(filepath1);

@@ -1,4 +1,4 @@
-export const objectToStringConverter = obj => {
+export default (obj) => {
   const prop = Object.entries(obj);
 
   const reuslt = prop.reduce((acc, pair) => {
@@ -6,6 +6,7 @@ export const objectToStringConverter = obj => {
     const trimKey = key.slice(0, key.length);
     const trimValue = typeof value === typeof 'string' ? value.slice(1, value.length) : value;
 
+    // eslint-disable-next-line no-param-reassign
     acc = `${acc}  ${trimKey}: ${trimValue}\n`;
     return acc;
   }, '');
