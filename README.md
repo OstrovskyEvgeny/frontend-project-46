@@ -7,5 +7,4 @@
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6e0286c70e3b16ae4547/test_coverage)](https://codeclimate.com/github/OstrovskyEvgeny/frontend-project-46/test_coverage)
 
-[![asciicast](https://asciinema.org/a/vQBeHuGLbSTGEvwDqlxtalK1p.svg)](https://asciinema.org/a/vQBeHuGLbSTGEvwDqlxtalK1p)
-
+[![asciicast](https://asciinema.org/a/drQS9E7cCpWQw5N4epoLa89lp.svg)](https://asciinema.org/a/drQS9E7cCpWQw5N4epoLa89lp)
