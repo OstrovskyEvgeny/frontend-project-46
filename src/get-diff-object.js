@@ -2,7 +2,8 @@ import _ from 'lodash';
 
 const getDiffObject = (obj1, obj2) => {
   const result = {};
-  const keys = Object.keys({...obj1, ...obj2}).sort();
+  const spreadObjects = { ...obj1, ...obj2 };
+  const keys = Object.keys(spreadObjects).sort();
 
   keys.forEach((key) => {
     const value1 = obj1[key];

@@ -9,11 +9,10 @@ const stylish = (obj, deep = 1, wildcard = '    ') => {
     const [key, value] = pair;
     let newValue = value;
 
-    if (key[0] === '-' || key[0] === '+' || key[0] === ' ') {
-      padding = wildcard.repeat(deep).slice(2);
-    } else {
-      padding = wildcard.repeat(deep);
-    }
+    padding = key[0] === '-'
+    || key[0] === '+'
+    || key[0] === ' ' ? wildcard.repeat(deep).slice(2) : padding = wildcard.repeat(deep);
+
     if (isObject(newValue)) {
       newValue = stylish(value, deep + 1, wildcard);
     }
