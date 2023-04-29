@@ -1,8 +1,8 @@
 import parser, { getPathToFile, getExtensionFile } from './parser.js';
-import { getDiffObject, getSortDiffObject } from './diff-object.js';
-import objectToStringConverter from './object-to-string-converter.js';
+import getDiffObject from './get-diff-object.js';
+import stylish from './stylish.js';
 
-export default (file1, file2) => {
+export default (file1, file2, format = 'stylish') => {
   const pathToFile1 = getPathToFile(file1);
   const pathToFile2 = getPathToFile(file2);
 
@@ -14,9 +14,15 @@ export default (file1, file2) => {
 
   const diffObject = getDiffObject(obj1, obj2);
 
-  const sortDiffObject = getSortDiffObject(diffObject);
+  const formattedTree = () => {
+    let result;
 
-  const diffObjectToString = objectToStringConverter(sortDiffObject);
+    if (format === 'stylish') {
+      result = stylish(diffObject);
+    }
 
-  return diffObjectToString;
+    return result;
+  };
+
+  return formattedTree();
 };
