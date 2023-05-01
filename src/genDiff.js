@@ -1,8 +1,8 @@
 import parser, { getPathToFile, getExtensionFile } from './parser.js';
 import getDiffObject from './get-diff-object.js';
-import stylish from './stylish.js';
+import getFormatter from './formatters/index.js';
 
-export default (file1, file2, format = 'stylish') => {
+const genDiff = (file1, file2, formatName = 'stylish') => {
   const pathToFile1 = getPathToFile(file1);
   const pathToFile2 = getPathToFile(file2);
 
@@ -14,15 +14,11 @@ export default (file1, file2, format = 'stylish') => {
 
   const diffObject = getDiffObject(obj1, obj2);
 
-  const formattedTree = () => {
-    let result;
+  const formatter = getFormatter(formatName);
 
-    if (format === 'stylish') {
-      result = stylish(diffObject);
-    }
+  const result = formatter(diffObject);
 
-    return result;
-  };
-
-  return formattedTree();
+  return result;
 };
+
+export default genDiff;
