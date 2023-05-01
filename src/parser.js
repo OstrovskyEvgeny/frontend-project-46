@@ -13,11 +13,15 @@ export const getExtensionFile = (pathToFile) => path.extname(pathToFile);
 
 export default (pathToFile, extension) => {
   const dataFile = readFile(pathToFile);
-  let obj;
-  if (extension === '.json') {
-    obj = parseJSONFile(dataFile);
-  } else if (extension === '.yaml' || extension === '.yml') {
-    obj = parseYAMLFile(dataFile);
+
+  if (extension === '.yaml' || extension === '.yml') {
+    const result = parseYAMLFile(dataFile);
+    return result;
   }
-  return obj;
+  if (extension === '.json') {
+    const result = parseJSONFile(dataFile);
+    return result;
+  }
+
+  return null;
 };

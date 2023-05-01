@@ -2,16 +2,13 @@
 import _ from 'lodash';
 
 const getCorrectValueForDisplay = (value) => {
-  let result;
   if (typeof value === 'string') {
-    result = `'${value}'`;
-  } else if (typeof value === 'object' && value !== null) {
-    result = '[complex value]';
-  } else {
-    result = value;
+    return `'${value}'`;
+  } if (typeof value === 'object' && value !== null) {
+    return '[complex value]';
   }
 
-  return result;
+  return value;
 };
 
 const reverseKeySign = (sign, key) => {

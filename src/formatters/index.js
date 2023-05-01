@@ -1,13 +1,15 @@
 import stylishFormatter from './stylish.js';
 import plainFormatter from './plain.js';
+import jsonFormatter from './json.js';
 
 export default (formatName) => {
-  let formatter;
   if (formatName === 'stylish') {
-    formatter = stylishFormatter;
-  } else if (formatName === 'plain') {
-    formatter = plainFormatter;
+    return stylishFormatter;
+  } if (formatName === 'plain') {
+    return plainFormatter;
+  } if (formatName === 'json') {
+    return jsonFormatter;
   }
 
-  return formatter;
+  return null;
 };

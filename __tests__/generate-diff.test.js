@@ -14,7 +14,7 @@ const readFixtureFile = (filename) => fs.readFileSync(getFixtureFilePath(filenam
 test('diff json files with default formatter', () => {
   const filePath1 = getFixtureFilePath('file1.json');
   const filePath2 = getFixtureFilePath('file2.json');
-  const diff = readFixtureFile('diff-files-stylish-output.txt');
+  const diff = readFixtureFile('output-stylish-format.txt');
 
   expect(genDiff(filePath1, filePath2)).toEqual(diff);
 });
@@ -22,8 +22,7 @@ test('diff json files with default formatter', () => {
 test('diff yaml files with stylish formatter', () => {
   const filePath1 = getFixtureFilePath('file1.yml');
   const filePath2 = getFixtureFilePath('file2.yml');
-  const diff = readFixtureFile('diff-files-stylish-output.txt');
-  console.log(diff === genDiff(filePath1, filePath2));
+  const diff = readFixtureFile('output-stylish-format.txt');
 
   expect(genDiff(filePath1, filePath2, 'stylish')).toEqual(diff);
 });
@@ -31,15 +30,31 @@ test('diff yaml files with stylish formatter', () => {
 test('diff json files with plain formatter', () => {
   const filePath1 = getFixtureFilePath('file1.yml');
   const filePath2 = getFixtureFilePath('file2.yml');
-  const diff = readFixtureFile('diff-files-plain-output.txt');
-  console.log(diff === genDiff(filePath1, filePath2, 'plain'));
+  const diff = readFixtureFile('output-plain-format.txt');
+
   expect(genDiff(filePath1, filePath2, 'plain')).toEqual(diff);
 });
 
 test('diff yaml files with plain formatter', () => {
   const filePath1 = getFixtureFilePath('file1.yml');
   const filePath2 = getFixtureFilePath('file2.yml');
-  const diff = readFixtureFile('diff-files-plain-output.txt');
-  console.log(diff === genDiff(filePath1, filePath2, 'plain'));
+  const diff = readFixtureFile('output-plain-format.txt');
+
   expect(genDiff(filePath1, filePath2, 'plain')).toEqual(diff);
+});
+
+test('diff json files with json formatter', () => {
+  const filePath1 = getFixtureFilePath('file1.json');
+  const filePath2 = getFixtureFilePath('file2.json');
+  const diff = readFixtureFile('output-json-format.txt');
+
+  expect(genDiff(filePath1, filePath2, 'json')).toEqual(diff);
+});
+
+test('diff yaml files with json formatter', () => {
+  const filePath1 = getFixtureFilePath('file1.yml');
+  const filePath2 = getFixtureFilePath('file2.yml');
+  const diff = readFixtureFile('output-json-format.txt');
+
+  expect(genDiff(filePath1, filePath2, 'json')).toEqual(diff);
 });

@@ -3,26 +3,26 @@ const isObject = (value) => typeof value === 'object' && value !== null && !Arra
 
 const stylishFormatter = (diff, deep = 1, wildcard = '    ') => {
   const props = Object.entries(diff);
-  let padding;
 
   const result = props.reduce((accumulator, pair) => {
     const [key, value] = pair;
-    let newValue = value;
 
-    padding = key[0] === '-'
+    const padding = key[0] === '-'
     || key[0] === '+'
-    || key[0] === ' ' ? wildcard.repeat(deep).slice(2) : padding = wildcard.repeat(deep);
+    || key[0] === ' ' ? wildcard.repeat(deep).slice(2) : wildcard.repeat(deep);
 
-    if (isObject(newValue)) {
-      newValue = stylishFormatter(value, deep + 1, wildcard);
+    if (isObject(value)) {
+      const valueIsObject = stylishFormatter(value, deep + 1, wildcard);
+      accumulator = `${accumulator}${padding}${key}: ${valueIsObject}\n`;
+    } else {
+      accumulator = `${accumulator}${padding}${key}: ${value}\n`;
     }
-    accumulator = `${accumulator}${padding}${key}: ${newValue}\n`;
 
     return accumulator;
   }, ('{\n'));
-  padding = wildcard.repeat(deep - 1);
+  const paddingForClosingBrackets = wildcard.repeat(deep - 1);
 
-  return `${result}${padding}}`;
+  return `${result}${paddingForClosingBrackets}}`;
 };
 
 export default stylishFormatter;

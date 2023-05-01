@@ -3,9 +3,10 @@ import _ from 'lodash';
 const getDiffObject = (obj1, obj2) => {
   const result = {};
   const spreadObjects = { ...obj1, ...obj2 };
-  const keys = Object.keys(spreadObjects).sort();
+  const keys = Object.keys(spreadObjects);
+  const sortKeys = _.sortBy(keys);
 
-  keys.forEach((key) => {
+  sortKeys.forEach((key) => {
     const value1 = obj1[key];
     const value2 = obj2[key];
 
