@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import _ from 'lodash';
 
 const getCorrectValueForDisplay = (value) => {
@@ -17,12 +16,12 @@ const reverseKeySign = (sign, key) => {
 };
 
 const plainFormatter = (obj) => {
-  const plain = (diff, path = '') => {
-    const regular = /[\s+|-]+/g;
+  const regular = /[\s+|-]+/g;
+
+  const iter = (diff, path = '') => {
     const properties = Object.entries(diff);
 
-    return properties.reduce((accumulator, property) => {
-      const [key, value] = property;
+    return properties.reduce((accumulator, [key, value]) => {
       const currentPath = path === '' ? `${path}${key}` : `${path}.${key}`;
 
       const sign = key[0];
@@ -32,19 +31,23 @@ const plainFormatter = (obj) => {
       const correctPropertyForDisplay = currentPath.replace(regular, '');
 
       if (sign === ' ' && typeof value === 'object' && value !== null) {
-        accumulator += plain(value, currentPath);
-      } else if (sign === '-') {
-        accumulator += _.has(diff, keyWithBackwardSign) ? `Property '${correctPropertyForDisplay}' was updated. From ${correctValueForDisplay} to ${getCorrectValueForDisplay(diff[keyWithBackwardSign])}\n` : `Property '${correctPropertyForDisplay}' was removed\n`;
-      } else if (sign === '+') {
-        if (_.has(diff, keyWithBackwardSign)) return accumulator;
-
-        accumulator += `Property '${correctPropertyForDisplay}' was added with value: ${correctValueForDisplay}\n`;
+        return accumulator + iter(value, currentPath);
+      }
+      if (sign === '-') {
+        return _.has(diff, keyWithBackwardSign)
+          ? `${accumulator}Property '${correctPropertyForDisplay}' was updated. From ${correctValueForDisplay} to ${getCorrectValueForDisplay(diff[keyWithBackwardSign])}\n`
+          : `${accumulator}Property '${correctPropertyForDisplay}' was removed\n`;
+      }
+      if (sign === '+') {
+        return _.has(diff, keyWithBackwardSign)
+          ? accumulator
+          : `${accumulator}Property '${correctPropertyForDisplay}' was added with value: ${correctValueForDisplay}\n`;
       }
 
       return accumulator;
     }, '');
   };
-  const result = plain(obj);
+  const result = iter(obj);
 
   return result.slice(0, -1);
 };
