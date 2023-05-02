@@ -15,5 +15,6 @@ program
     const formatName = program.opts().format;
 
     console.log(genDiff(filepath1, filepath2, formatName));
-  })
-  .parse(process.argv);
+  });
+
+program.parse();
