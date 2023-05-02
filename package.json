@@ -8,7 +8,7 @@
   "simple-git-hooks": {
     "pre-push": "make lint"
   },
-  "main": "bin/gendiff.js",
+  "main": "src/genDiff.js",
   "engines": {
     "node": ">=14"
   },
