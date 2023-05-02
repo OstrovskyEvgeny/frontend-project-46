@@ -58,3 +58,20 @@ test('diff yaml files with json formatter', () => {
 
   expect(genDiff(filePath1, filePath2, 'json')).toEqual(diff);
 });
+// /// hexlet tests
+
+// test('hexlet stylish', () => {
+//   const filePath1 = getFixtureFilePath('file1-hexlet.json');
+//   const filePath2 = getFixtureFilePath('file2-hexlet.json');
+//   const diff = readFixtureFile('result_stylish.txt');
+
+//   expect(genDiff(filePath1, filePath2)).toEqual(diff);
+// });
+
+// test('hexlet plain', () => {
+//   const filePath1 = getFixtureFilePath('file1-hexlet.yml');
+//   const filePath2 = getFixtureFilePath('file2-hexlet.yml');
+//   const diff = readFixtureFile('result_plain.txt');
+
+//   expect(genDiff(filePath1, filePath2, 'plain')).toEqual(diff);
+// });

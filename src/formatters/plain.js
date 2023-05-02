@@ -46,7 +46,7 @@ const plainFormatter = (obj) => {
   };
   const result = plain(obj);
 
-  return result.slice(0, -1);
+  return `${result.slice(0, -1)}\n`;
 };
 
 export default plainFormatter;
