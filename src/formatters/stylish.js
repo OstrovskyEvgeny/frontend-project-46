@@ -1,13 +1,13 @@
-import isObjectLike from 'lodash/isObjectLike.js';
+import isPlainObject from 'lodash/isPlainObject.js';
 
 const makeStringFromObject = (obj, deep = 1, wildcard = '    ') => {
-  if (!isObjectLike(obj) || Array.isArray(obj)) return obj;
+  if (!isPlainObject(obj) || Array.isArray(obj)) return obj;
 
   const padding = wildcard.repeat(deep);
   const propertyes = Object.entries(obj);
 
   const result = propertyes.reduce((accumulator, [key, value]) => {
-    if (isObjectLike(value) && !Array.isArray(value)) {
+    if (isPlainObject(value)) {
       const valueObject = makeStringFromObject(value, deep + 1, wildcard);
       return `${accumulator}${padding}${key}: ${valueObject}\n`;
     }
@@ -19,7 +19,7 @@ const makeStringFromObject = (obj, deep = 1, wildcard = '    ') => {
 
 const stylish = (collectionsDiff, deep = 1, wildcard = '    ') => {
   const result = collectionsDiff.reduce((accumulator, {
-    key, value, type, children,
+    key, value, oldValue, type, children,
   }) => {
     const valueForDisplay = makeStringFromObject(value, deep + 1, wildcard);
     const padding = wildcard.repeat(deep);
@@ -37,11 +37,9 @@ const stylish = (collectionsDiff, deep = 1, wildcard = '    ') => {
 
           return `${accumulator}${padding}${key}: ${childrens}\n`;
         }
-        const [value1, value2] = value; // насколько лаконично решение?
-        const value1ForDisplay = makeStringFromObject(value1, deep + 1, wildcard);
-        const value2ForDisplay = makeStringFromObject(value2, deep + 1, wildcard);
+        const oldValueForDisplay = makeStringFromObject(oldValue, deep + 1, wildcard);
 
-        return `${accumulator}${padding.slice(2)}- ${key}: ${value1ForDisplay}\n${padding.slice(2)}+ ${key}: ${value2ForDisplay}\n`;
+        return `${accumulator}${padding.slice(2)}- ${key}: ${oldValueForDisplay}\n${padding.slice(2)}+ ${key}: ${valueForDisplay}\n`;
       }
       default:
         return accumulator;

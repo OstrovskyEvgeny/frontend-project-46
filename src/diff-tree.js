@@ -1,5 +1,5 @@
 import sortBy from 'lodash/sortBy.js';
-import isObjectLike from 'lodash/isObjectLike.js';
+import isPlainObject from 'lodash/isPlainObject.js';
 import isEqual from 'lodash/isEqual.js';
 
 const getDiffTree = (obj1, obj2) => {
@@ -11,9 +11,7 @@ const getDiffTree = (obj1, obj2) => {
     const value1 = obj1[key];
     const value2 = obj2[key];
 
-    if (
-      isObjectLike(value1) && isObjectLike(value2)
-      && !Array.isArray(value1) && !Array.isArray(value2)) {
+    if (isPlainObject(value1) && isPlainObject(value2)) {
       if (isEqual(value1, value2)) {
         return {
           key,
@@ -47,7 +45,8 @@ const getDiffTree = (obj1, obj2) => {
 
       return {
         key,
-        value: [value1, value2], // подумать что с этим сделать
+        value: value2,
+        oldValue: value1, // то самое
         type: 'changed',
       };
     }

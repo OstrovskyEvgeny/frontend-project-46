@@ -1,7 +1,7 @@
-import isObjectLike from 'lodash/isObjectLike.js';
+import isPlainObject from 'lodash/isPlainObject.js';
 
 const getCorrectValueForDisplay = (value) => {
-  if (isObjectLike(value) && !Array.isArray(value)) {
+  if (isPlainObject(value)) {
     return '[complex value]';
   }
   if (typeof value === 'string') {
@@ -13,7 +13,7 @@ const getCorrectValueForDisplay = (value) => {
 
 const plain = (collectionsDiff) => {
   const iter = (diff, currentPath = '') => diff.reduce((accumulator, {
-    key, value, type, children,
+    key, value, oldValue, type, children,
   }) => {
     const path = currentPath === '' ? `${currentPath}${key}` : `${currentPath}.${key}`;
     const valueForDisplay = getCorrectValueForDisplay(value);
@@ -29,10 +29,8 @@ const plain = (collectionsDiff) => {
         if (children) {
           return accumulator + iter(children, path);
         }
-        const [value1, value2] = value;
-        const value1ForDisplay1 = getCorrectValueForDisplay(value1);
-        const value1ForDisplay2 = getCorrectValueForDisplay(value2);
-        return `${accumulator}Property '${path}' was updated. From ${value1ForDisplay1} to ${value1ForDisplay2}\n`;
+        const oldValueForDisplay = getCorrectValueForDisplay(oldValue);
+        return `${accumulator}Property '${path}' was updated. From ${oldValueForDisplay} to ${valueForDisplay}\n`;
       }
       default:
         return accumulator;
