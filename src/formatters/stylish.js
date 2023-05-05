@@ -1,27 +1,54 @@
-/* eslint-disable no-param-reassign */
-const isObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+import isObjectLike from 'lodash/isObjectLike.js';
 
-const stylishFormatter = (diff, deep = 1, wildcard = '    ') => {
-  const props = Object.entries(diff);
+const makeStringFromObject = (obj, deep = 1, wildcard = '    ') => {
+  if (!isObjectLike(obj) || Array.isArray(obj)) return obj;
 
-  const result = props.reduce((accumulator, [key, value]) => {
-    const padding = key[0] === '-'
-    || key[0] === '+'
-    || key[0] === ' ' ? wildcard.repeat(deep).slice(2) : wildcard.repeat(deep);
+  const padding = wildcard.repeat(deep);
+  const propertyes = Object.entries(obj);
 
-    if (isObject(value)) {
-      const valueIsObject = stylishFormatter(value, deep + 1, wildcard);
-      return `${accumulator}${padding}${key}: ${valueIsObject}\n`;
+  const result = propertyes.reduce((accumulator, [key, value]) => {
+    if (isObjectLike(value) && !Array.isArray(value)) {
+      const valueObject = makeStringFromObject(value, deep + 1, wildcard);
+      return `${accumulator}${padding}${key}: ${valueObject}\n`;
     }
-    if (!isObject(value)) {
-      return `${accumulator}${padding}${key}: ${value}\n`;
-    }
+    return `${accumulator}${padding}${key}: ${value}\n`;
+  }, '{\n');
 
-    return accumulator;
-  }, ('{\n'));
-  const paddingForClosingBrackets = wildcard.repeat(deep - 1);
-
-  return `${result}${paddingForClosingBrackets}}`;
+  return `${result}${wildcard.repeat(deep - 1)}}`;
 };
 
-export default stylishFormatter;
+const stylish = (collectionsDiff, deep = 1, wildcard = '    ') => {
+  const result = collectionsDiff.reduce((accumulator, {
+    key, value, type, children,
+  }) => {
+    const valueForDisplay = makeStringFromObject(value, deep + 1, wildcard);
+    const padding = wildcard.repeat(deep);
+
+    switch (type) {
+      case 'added':
+        return `${accumulator}${padding.slice(2)}+ ${key}: ${valueForDisplay}\n`;
+      case 'deleted':
+        return `${accumulator}${padding.slice(2)}- ${key}: ${valueForDisplay}\n`;
+      case 'unchanged':
+        return `${accumulator}${padding}${key}: ${valueForDisplay}\n`;
+      case 'changed': {
+        if (children) {
+          const childrens = stylish(children, deep + 1, wildcard);
+
+          return `${accumulator}${padding}${key}: ${childrens}\n`;
+        }
+        const [value1, value2] = value; // насколько лаконично решение?
+        const value1ForDisplay = makeStringFromObject(value1, deep + 1, wildcard);
+        const value2ForDisplay = makeStringFromObject(value2, deep + 1, wildcard);
+
+        return `${accumulator}${padding.slice(2)}- ${key}: ${value1ForDisplay}\n${padding.slice(2)}+ ${key}: ${value2ForDisplay}\n`;
+      }
+      default:
+        return accumulator;
+    }
+  }, ('{\n'));
+
+  return `${result}${wildcard.repeat(deep - 1)}}`;
+};
+
+export default stylish;

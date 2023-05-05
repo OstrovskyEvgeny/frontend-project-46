@@ -1,55 +1,46 @@
-import _ from 'lodash';
+import isObjectLike from 'lodash/isObjectLike.js';
 
 const getCorrectValueForDisplay = (value) => {
+  if (isObjectLike(value) && !Array.isArray(value)) {
+    return '[complex value]';
+  }
   if (typeof value === 'string') {
     return `'${value}'`;
-  } if (typeof value === 'object' && value !== null) {
-    return '[complex value]';
   }
 
   return value;
 };
 
-const reverseKeySign = (sign, key) => {
-  const result = sign === '-' ? key.replace(sign, '+') : key.replace(sign, '-');
-  return result;
-};
+const plain = (collectionsDiff) => {
+  const iter = (diff, currentPath = '') => diff.reduce((accumulator, {
+    key, value, type, children,
+  }) => {
+    const path = currentPath === '' ? `${currentPath}${key}` : `${currentPath}.${key}`;
+    const valueForDisplay = getCorrectValueForDisplay(value);
 
-const plainFormatter = (obj) => {
-  const regular = /[\s+|-]+/g;
-
-  const iter = (diff, path = '') => {
-    const properties = Object.entries(diff);
-
-    return properties.reduce((accumulator, [key, value]) => {
-      const currentPath = path === '' ? `${path}${key}` : `${path}.${key}`;
-
-      const sign = key[0];
-      const keyWithBackwardSign = reverseKeySign(sign, key);
-
-      const correctValueForDisplay = getCorrectValueForDisplay(value);
-      const correctPropertyForDisplay = currentPath.replace(regular, '');
-
-      if (sign === ' ' && typeof value === 'object' && value !== null) {
-        return accumulator + iter(value, currentPath);
+    switch (type) {
+      case 'added':
+        return `${accumulator}Property '${path}' was added with value: ${valueForDisplay}\n`;
+      case 'deleted':
+        return `${accumulator}Property '${path}' was removed\n`;
+      case 'unchanged':
+        return accumulator;
+      case 'changed': {
+        if (children) {
+          return accumulator + iter(children, path);
+        }
+        const [value1, value2] = value;
+        const value1ForDisplay1 = getCorrectValueForDisplay(value1);
+        const value1ForDisplay2 = getCorrectValueForDisplay(value2);
+        return `${accumulator}Property '${path}' was updated. From ${value1ForDisplay1} to ${value1ForDisplay2}\n`;
       }
-      if (sign === '-') {
-        return _.has(diff, keyWithBackwardSign)
-          ? `${accumulator}Property '${correctPropertyForDisplay}' was updated. From ${correctValueForDisplay} to ${getCorrectValueForDisplay(diff[keyWithBackwardSign])}\n`
-          : `${accumulator}Property '${correctPropertyForDisplay}' was removed\n`;
-      }
-      if (sign === '+') {
-        return _.has(diff, keyWithBackwardSign)
-          ? accumulator
-          : `${accumulator}Property '${correctPropertyForDisplay}' was added with value: ${correctValueForDisplay}\n`;
-      }
-
-      return accumulator;
-    }, '');
-  };
-  const result = iter(obj);
+      default:
+        return accumulator;
+    }
+  }, '');
+  const result = iter(collectionsDiff);
 
   return result.slice(0, -1);
 };
 
-export default plainFormatter;
+export default plain;

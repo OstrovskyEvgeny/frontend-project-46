@@ -1,12 +1,12 @@
-import stylishFormatter from './stylish.js';
-import plainFormatter from './plain.js';
+import stylish from './stylish.js';
+import plain from './plain.js';
 import jsonFormatter from './json.js';
 
 export default (formatName) => {
   if (formatName === 'stylish') {
-    return stylishFormatter;
+    return stylish;
   } if (formatName === 'plain') {
-    return plainFormatter;
+    return plain;
   } if (formatName === 'json') {
     return jsonFormatter;
   }
