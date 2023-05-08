@@ -2,13 +2,17 @@ import sortBy from 'lodash/sortBy.js';
 import isPlainObject from 'lodash/isPlainObject.js';
 import isEqual from 'lodash/isEqual.js';
 
-const makeDiffObject = (key, type, value, oldValue) => {
+const makeDiffObject = (key, type, value, oldValue, recursion) => {
   const obj = {
     key,
     type,
     value,
     oldValue,
   };
+  if (recursion !== undefined) {
+    const objWithChildren = { ...obj, children: recursion(oldValue, value) };
+    return objWithChildren;
+  }
 
   return obj;
 };
@@ -26,10 +30,7 @@ const getDiffTree = (obj1, obj2) => {
       if (isEqual(value1, value2)) {
         return makeDiffObject(key, 'unchanged', value1);
       }
-      const diffObj = makeDiffObject(key, 'changed', value2, value1);
-      diffObj.children = getDiffTree(value1, value2); // это аля мутация, по сути тесты бы не прошли
-
-      return diffObj;
+      return makeDiffObject(key, 'changed', value2, value1, getDiffTree);
     }
 
     if (!isEqual(value1, value2)) {

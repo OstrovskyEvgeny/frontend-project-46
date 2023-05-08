@@ -33,9 +33,9 @@ const stylish = (collectionsDiff, deep = 1, wildcard = '    ') => {
         return `${accumulator}${padding}${key}: ${valueForDisplay}\n`;
       case 'changed': {
         if (children) {
-          const childrens = stylish(children, deep + 1, wildcard);
+          const collChildren = stylish(children, deep + 1, wildcard);
 
-          return `${accumulator}${padding}${key}: ${childrens}\n`;
+          return `${accumulator}${padding}${key}: ${collChildren}\n`;
         }
         const oldValueForDisplay = makeStringFromObject(oldValue, deep + 1, wildcard);
 
